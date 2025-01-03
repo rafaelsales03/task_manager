@@ -1,0 +1,11 @@
+const taskDiv = document.querySelector("#task-<%= @task.id %>");
+
+if (taskDiv) {
+  taskDiv.classList.add("completed-task");
+}
+
+const editButton = document.querySelector("#edit-button-<%= @task.id %>");
+if (editButton) {
+  editButton.classList.add("disabled-edit-button");
+   editButton.setAttribute("onclick", "return false");
+}

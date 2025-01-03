@@ -1,0 +1,66 @@
+<p class="notice"><%= notice %></p>
+<% content_for :title, "Tasks" %>
+
+<h1>Tasks</h1>
+<div class="container <%= 'empty' if @tasks.empty? %>">
+<div id="tasks">
+  <% if @tasks.any? %>
+    <% @tasks.each do |task| %>
+
+      <div class="<%=  task.completed ? 'completed-task' : 'task' %>" id="task-<%= task.id %>">
+        <div class="task-title">
+          <%= task.title %>
+        </div>
+
+        <div class="task-due-date">
+          Due date: <br><%= task.due_date.strftime("%d/%m/%Y") if task.due_date %>
+        </div>
+
+        <div class="task-status">
+          Status: <br><%= task.completed ? 'Concluído' : 'Pendente' %>
+        </div>
+        
+        <div class="action-buttons">
+          <%= link_to task_path(task), class: "btn btn-info" do %>
+            <i class="fas fa-eye"></i>
+          <% end %>
+
+         <%= link_to edit_task_path(task), 
+      class: "btn btn-edit #{task.completed ? 'disabled-edit-button' : ''}", 
+      id: "edit-button-#{task.id}",
+      data: { 
+        turbo: false,
+        disabled: task.completed
+      },
+      onclick: "if(this.dataset.disabled === 'true') return false;" do %>
+            <i class="fas fa-pencil-alt"></i>
+          <% end %>
+
+          <% unless task.completed %>
+            <%= link_to mark_as_completed_task_path(task),
+                        class: "btn btn-success",
+                        id: "complete-task-#{task.id}",
+                        data: { turbo_method: :patch, remote: true } do %>
+              <i class="fas fa-check"></i>
+            <% end %>
+          <% end %>
+
+          <%= link_to task_path(task),
+                      class: "btn btn-danger",
+                      data: {
+                        turbo_method: :delete,
+                        turbo_confirm: "Tem certeza?"
+                      } do %>
+            <i class="fas fa-trash"></i>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p id="no-tasks-message">Não há nenhuma tarefa</p>
+  <% end %>
+</div>
+<%= link_to new_task_path, class: "btn btn-new", style: "margin-top: 20px;" do %>
+  <i class="fas fa-plus"></i> New Task
+<% end %>
+</div>

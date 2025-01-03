@@ -1,0 +1,4 @@
+document.getElementById('task-<%= @task.id %>').remove();
+if (document.querySelectorAll('.task').length === 0) {
+  document.getElementById('tasks').innerHTML = '<p id="no-tasks-message">Não há nenhuma tarefa</p>';
+}

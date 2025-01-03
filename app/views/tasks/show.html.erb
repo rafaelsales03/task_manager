@@ -1,0 +1,24 @@
+<div class="task-details">
+  <h1 class="title-show"><%= @task.title %></h1>
+  
+  <div class="task-info">
+    
+      <h4>Description:</h4>
+      <p> <%= @task.description %></p>
+    
+   
+      <h4>Status:</h4>
+      <p> <%= @task.completed ? "Concluído" : "Pendente" %></p>
+    
+    
+      <h4>Due date:</h4>
+     <p> <%= @task.due_date.strftime('%d/%m/%Y') if @task.due_date %></p>
+    
+  </div>
+
+  <div class="action-buttons">
+    <%= link_to tasks_path, class: "btn btn-back" do %>
+      <i class="fas fa-arrow-left"></i> Back
+    <% end %>
+  </div>
+  </div>
