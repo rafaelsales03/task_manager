@@ -1,63 +1,72 @@
-require "test_helper"
+class TasksController < ApplicationController
+  before_action :set_task, only: %i[show edit update destroy]
 
-class TasksControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @task = tasks(:one)
+  def index
+    @tasks = Task.order(completed: :asc, due_date: :asc)
   end
 
-  test "should get index" do
-    get tasks_url
-    assert_response :success
+  def show; end
+
+  def new
+    @task = Task.new
   end
 
-  test "should get new" do
-    get new_task_url
-    assert_response :success
-  end
+  def edit; end
 
-  test "should create task" do
-    assert_difference("Task.count") do
-      post tasks_url, params: {
-        task: {
-          title: "New Task",
-          description: "Testing task creation",
-          completed: false,
-          due_date: Date.today
-        }
-      }
+  def create
+    @task = Task.new(task_params)
+
+    respond_to do |format|
+      if @task.save
+        format.html { redirect_to tasks_path, notice: "Task was successfully created." }
+        format.json { render :show, status: :created, location: @task }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @task.errors, status: :unprocessable_entity }
+      end
     end
-
-    assert_redirected_to tasks_path
   end
 
-  test "should show task" do
-    get task_url(@task)
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_task_url(@task)
-    assert_response :success
-  end
-
-  test "should update task" do
-    patch task_url(@task), params: {
-      task: {
-        title: "Updated Task",
-        description: "Updated description",
-        completed: true,
-        due_date: Date.tomorrow
-      }
-    }
-
-    assert_redirected_to tasks_path
-  end
-
-  test "should destroy task" do
-    assert_difference("Task.count", -1) do
-      delete task_url(@task)
+  def update
+    respond_to do |format|
+      if @task.update(task_params)
+        format.html { redirect_to tasks_path, notice: "Task was successfully updated." }
+        format.json { render :show, status: :ok, location: @task }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @task.errors, status: :unprocessable_entity }
+      end
     end
+  end
 
-    assert_redirected_to tasks_path
+  def mark_as_completed
+    @task = Task.find(params[:id])
+    respond_to do |format|
+      if @task.update(completed: true)
+        format.html { redirect_to tasks_path, notice: "Task was successfully completed." }
+        format.json { head :ok }
+      else
+        format.html { redirect_to tasks_path, alert: "Unable to mark as completed." }
+        format.json { head :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    @task = Task.find(params[:id])
+    @task.destroy
+    respond_to do |format|
+      format.html { redirect_to tasks_path, notice: "Task was successfully deleted." }
+    end
+  end
+
+  private
+
+  def set_task
+    @task = Task.find(params[:id])
+  end
+
+  def task_params
+    params.require(:task).permit(:title, :description, :completed, :due_date)
   end
 end
