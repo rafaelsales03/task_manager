@@ -21,7 +21,7 @@ class TasksTest < ApplicationSystemTestCase
     click_on "Create Task"
 
     assert_text "Task was successfully created"
-    click_on "Back"
+    visit tasks_url
   end
 
   test "should update Task" do
@@ -35,12 +35,14 @@ class TasksTest < ApplicationSystemTestCase
     click_on "Update Task"
 
     assert_text "Task was successfully updated"
-    click_on "Back"
+    visit tasks_url
   end
 
   test "should destroy Task" do
     visit tasks_url
-    find("#task-#{@task.id} .btn-danger").click
+    page.accept_confirm "Tem certeza?" do
+      find("#task-#{@task.id} .btn-danger").click
+    end
 
     assert_text "Task was successfully destroyed"
   end
