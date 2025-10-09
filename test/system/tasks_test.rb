@@ -25,7 +25,7 @@ class TasksTest < ApplicationSystemTestCase
   end
 
   test "should update Task" do
-    visit task_url(@task)
+    visit tasks_url
     find("#edit-button-#{@task.id}").click
 
     check "Completed" if @task.completed
@@ -39,8 +39,8 @@ class TasksTest < ApplicationSystemTestCase
   end
 
   test "should destroy Task" do
-    visit task_url(@task)
-    find(".btn-danger").click
+    visit tasks_url
+    find("#task-#{@task.id} .btn-danger").click
 
     assert_text "Task was successfully destroyed"
   end
