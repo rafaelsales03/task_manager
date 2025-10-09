@@ -12,7 +12,7 @@ class TasksTest < ApplicationSystemTestCase
 
   test "should create task" do
     visit tasks_url
-    click_on "New task"
+    click_on "New Task"
 
     check "Completed" if @task.completed
     fill_in "Description", with: @task.description
@@ -26,7 +26,7 @@ class TasksTest < ApplicationSystemTestCase
 
   test "should update Task" do
     visit task_url(@task)
-    click_on "Edit this task", match: :first
+    find("#edit-button-#{@task.id}").click
 
     check "Completed" if @task.completed
     fill_in "Description", with: @task.description
@@ -40,7 +40,7 @@ class TasksTest < ApplicationSystemTestCase
 
   test "should destroy Task" do
     visit task_url(@task)
-    click_on "Destroy this task", match: :first
+    find(".btn-danger").click
 
     assert_text "Task was successfully destroyed"
   end
